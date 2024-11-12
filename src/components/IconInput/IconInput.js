@@ -1,4 +1,4 @@
-import React, { useId } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import { COLORS } from "../../constants";
@@ -9,17 +9,17 @@ import VisuallyHidden from "../VisuallyHidden";
 const STYLES = {
   small: {
     size: 16,
-    height: `${24/16}rem`,
-    paddingLeft: `${24 / 16}rem`,
-    borderWidth: '1px',
-    strokeWidth: '10px',
+    fontSize: `${14 / 16}rem`,
+    height: `${24 / 16}rem`,
+    borderWidth: "1px",
+    strokeWidth: 1,
   },
   large: {
     size: 24,
-    height: `${36/16}rem`,
-    paddingLeft: `${36 / 16}rem`,
-    borderWidth: '2px',
-    strokeWidth: '20px',
+    fontSize: `1rem`,
+    height: `${36 / 16}rem`,
+    borderWidth: "2px",
+    strokeWidth: 2,
   },
 };
 
@@ -31,24 +31,18 @@ const IconInput = ({
   placeholder,
   ...props
 }) => {
-  // const id = useId();
-  const id = '123';
   return (
-    <Wrapper>
-      <VisuallyHidden>
-        <label for={id}>{label}</label>
-      </VisuallyHidden>
+    <Wrapper style={{ "--font-size": STYLES[size].fontSize }}>
+      <VisuallyHidden>a</VisuallyHidden>
+      <Label>{label}</Label>
       <InputWrapper>
         <NativeInput
-          id={id}
-          width={width}
           placeholder={placeholder}
           {...props}
-          type={icon === 'search' ? 'search' : 'email'}
           style={{
-            "--padding-left": STYLES[size].paddingLeft,
             "--border-width": STYLES[size].borderWidth,
             "--height": STYLES[size].height,
+            "--width": width + "px",
           }}
         />
         <LeadingIcon
@@ -61,28 +55,33 @@ const IconInput = ({
   );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.label`
+  position: relative;
   padding: 2px;
   width: max-content;
+  font-family: "Roboto", sans-serif;
+  font-size: var(--font-size);
 
   color: ${COLORS.gray700};
-
-  &:focus-within {
-    outline: 1px dotted #212121;
-    outline: 5px auto -webkit-focus-ring-color;
-  }
 `;
 
-const InputWrapper = styled.div`
+const Label = styled.span`
+  outline: none;
+  margin-right: ${6 / 16}rem;
+  vertical-align: center;
+`;
+
+const InputWrapper = styled.span`
+  display: inline-block;
   position: relative;
-  width: max-content;
-  font-family: "Roboto", sans-serif;
-  background-color: orange;
+
+  &:hover {
+    color: ${COLORS.black};
+  }
 `;
 
 const LeadingIcon = styled(Icon)`
   position: absolute;
-  pointer-events: none;
   top: 0;
   bottom: 0;
   margin: auto 0;
@@ -90,14 +89,15 @@ const LeadingIcon = styled(Icon)`
 `;
 
 const NativeInput = styled.input`
-  padding-left: var(--padding-left);
+  width: var(--width);
+  height: var(--height);
+  padding-left: var(--height);
+
   top: 0;
   bottom: 0;
 
   color: inherit;
-
-  height: var(--height);
-
+  font-size: inherit;
   font-weight: 700;
 
   &::placeholder {
@@ -106,15 +106,10 @@ const NativeInput = styled.input`
   }
 
   &:focus {
-    outline: none;
-  }
-
-  &:hover {
-    color: ${COLORS.black};
+    outline-offset: 2px;
   }
 
   border: none;
-
   border-bottom-style: solid;
   border-bottom-width: var(--border-width);
   border-bottom-color: black;
